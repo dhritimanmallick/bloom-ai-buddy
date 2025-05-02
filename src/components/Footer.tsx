@@ -1,7 +1,10 @@
 
 import React from 'react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Footer: React.FC = () => {
+  const { t } = useLanguage();
+  
   return (
     <footer className="border-t py-6 bg-background">
       <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
@@ -18,9 +21,9 @@ const Footer: React.FC = () => {
           </p>
         </div>
         <div className="flex gap-4 text-sm text-muted-foreground">
-          <a href="#" className="hover:underline">Privacy Policy</a>
-          <a href="#" className="hover:underline">Terms of Service</a>
-          <a href="#" className="hover:underline">Contact Support</a>
+          <a href="#" className="hover:underline">{t('privacyPolicy')}</a>
+          <a href="#" className="hover:underline">{t('termsOfService')}</a>
+          <a href="#" className="hover:underline">{t('contactSupport')}</a>
         </div>
       </div>
     </footer>

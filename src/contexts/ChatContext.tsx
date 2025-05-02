@@ -1,5 +1,6 @@
 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { useLanguage } from './LanguageContext';
 
 export type MessageType = {
   id: string;
@@ -19,15 +20,26 @@ type ChatContextType = {
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider: React.FC<{children: ReactNode}> = ({ children }) => {
+  const { language, t } = useLanguage();
   const [messages, setMessages] = useState<MessageType[]>([
     {
       id: '1',
-      text: "Hello! I'm your antenatal care assistant from Dr. Dheepa Thyagrajan's office. How can I help you today?",
+      text: t('greeting'),
       sender: 'ai',
       timestamp: new Date(),
     },
   ]);
   const [isTyping, setIsTyping] = useState(false);
+
+  // Update initial message when language changes
+  useEffect(() => {
+    setMessages(prev => [{
+      id: '1',
+      text: t('greeting'),
+      sender: 'ai',
+      timestamp: new Date(),
+    }, ...prev.slice(1)]);
+  }, [language, t]);
 
   const addMessage = (text: string, sender: 'user' | 'ai') => {
     const newMessage: MessageType = {
@@ -43,7 +55,7 @@ export const ChatProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     setMessages([
       {
         id: '1',
-        text: "Hello! I'm your antenatal care assistant from Dr. Dheepa Thyagrajan's office. How can I help you today?",
+        text: t('greeting'),
         sender: 'ai',
         timestamp: new Date(),
       },
