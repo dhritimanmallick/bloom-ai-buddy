@@ -15,7 +15,7 @@ const Header: React.FC = () => {
               <path d="M12 9v6" />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-care-text">Bloom</h1>
+          <h1 className="text-2xl font-bold text-care-text">Amma அம்மா</h1>
         </div>
         
         <div className="flex items-center gap-4">

@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
             </svg>
           </div>
           <p className="text-sm text-muted-foreground">
-            Bloom Antenatal Care Assistant &copy; {new Date().getFullYear()}
+            Amma அம்மா Antenatal Care Assistant &copy; {new Date().getFullYear()}
           </p>
         </div>
         <div className="flex gap-4 text-sm text-muted-foreground">

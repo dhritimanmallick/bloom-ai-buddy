@@ -11,14 +11,19 @@ const ChatInterface: React.FC = () => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Mock responses based on keywords
+  // Mock responses based on keywords for prenatal care
   const mockResponses: Record<string, string> = {
-    hello: "Hello there! How are you feeling today?",
-    appointment: "I can help you schedule an appointment. Would you prefer morning or afternoon?",
-    pain: "I'm sorry to hear you're experiencing pain. Could you describe where the pain is located and its severity?",
-    nausea: "Nausea is common during pregnancy. Have you tried eating small, frequent meals? Ginger tea can also help.",
-    emergency: "If you're experiencing severe pain, bleeding, or believe this is an emergency, please call emergency services immediately at 911.",
-    default: "Thank you for your message. Is there anything else you'd like to know about your pregnancy care?"
+    hello: "Hello! I'm your antenatal care assistant from Dr. Dheepa Thyagrajan's office. How can I help you today?",
+    appointment: "I can help you schedule an appointment with Dr. Dheepa Thyagrajan. Would you prefer morning or afternoon?",
+    pain: "I understand you're experiencing pain. Could you describe where it's located and its intensity? For severe or sudden pain, please contact Dr. Dheepa Thyagrajan immediately.",
+    nausea: "Nausea is common during pregnancy. Dr. Dheepa Thyagrajan recommends eating small, frequent meals and trying ginger tea. If vomiting is severe or persistent, please schedule an appointment.",
+    cramp: "Mild cramping can be normal, but if you experience severe cramping or it's accompanied by bleeding, please contact Dr. Dheepa Thyagrajan immediately.",
+    bleeding: "Any bleeding during pregnancy should be reported. Please contact Dr. Dheepa Thyagrajan's office immediately for evaluation.",
+    diet: "A balanced diet rich in fruits, vegetables, proteins, and whole grains is important. Dr. Dheepa Thyagrajan recommends prenatal vitamins with folic acid as well.",
+    exercise: "Moderate exercise like walking, swimming, or prenatal yoga is beneficial. Dr. Dheepa Thyagrajan advises to avoid high-impact activities and to stay hydrated.",
+    sleep: "Sleeping on your left side promotes better blood flow. Dr. Dheepa Thyagrajan suggests using pregnancy pillows for support and maintaining a regular sleep schedule.",
+    emergency: "If you're experiencing severe pain, heavy bleeding, or believe this is an emergency, please call emergency services immediately at 911 or contact Dr. Dheepa Thyagrajan's emergency line.",
+    default: "Thank you for your message. Is there anything else you'd like to know about your prenatal care? For specific medical advice, Dr. Dheepa Thyagrajan would be happy to address your concerns during your next appointment."
   };
 
   useEffect(() => {
@@ -66,7 +71,7 @@ const ChatInterface: React.FC = () => {
       <div className="flex justify-between items-center p-4 border-b">
         <div className="flex items-center gap-2">
           <MessageCircle className="h-5 w-5 text-care" />
-          <h2 className="text-lg font-medium">Care Assistant</h2>
+          <h2 className="text-lg font-medium">Dr. Dheepa's Care Assistant</h2>
         </div>
       </div>
 
@@ -74,14 +79,19 @@ const ChatInterface: React.FC = () => {
         {messages.map((message) => (
           <div
             key={message.id}
-            className={cn("chat-bubble", message.sender === 'ai' ? 'ai' : 'user')}
+            className={cn(
+              "max-w-[80%] rounded-lg p-4 mb-2",
+              message.sender === 'ai' 
+                ? "bg-care-light text-gray-800 self-start rounded-bl-none" 
+                : "bg-care text-white self-end rounded-br-none"
+            )}
           >
             {message.text}
           </div>
         ))}
         
         {isTyping && (
-          <div className="chat-bubble ai">
+          <div className="max-w-[80%] rounded-lg p-4 mb-2 bg-care-light text-gray-800 self-start rounded-bl-none">
             <div className="flex space-x-1">
               <div className="h-2 w-2 bg-care rounded-full animate-pulse-gentle"></div>
               <div className="h-2 w-2 bg-care rounded-full animate-pulse-gentle" style={{ animationDelay: '0.2s' }}></div>
@@ -99,7 +109,7 @@ const ChatInterface: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Type your question..."
+            placeholder="Ask about your pregnancy care..."
             className="flex-1"
           />
           <Button onClick={handleSend} className="bg-care hover:bg-care-dark">

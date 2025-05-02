@@ -22,7 +22,7 @@ export const ChatProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   const [messages, setMessages] = useState<MessageType[]>([
     {
       id: '1',
-      text: "Hello! I'm your antenatal care assistant. How can I help you today?",
+      text: "Hello! I'm your antenatal care assistant from Dr. Dheepa Thyagrajan's office. How can I help you today?",
       sender: 'ai',
       timestamp: new Date(),
     },
@@ -43,7 +43,7 @@ export const ChatProvider: React.FC<{children: ReactNode}> = ({ children }) => {
     setMessages([
       {
         id: '1',
-        text: "Hello! I'm your antenatal care assistant. How can I help you today?",
+        text: "Hello! I'm your antenatal care assistant from Dr. Dheepa Thyagrajan's office. How can I help you today?",
         sender: 'ai',
         timestamp: new Date(),
       },
