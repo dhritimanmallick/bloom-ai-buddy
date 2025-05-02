@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 type Language = 'en' | 'ta'; // English or Tamil
@@ -29,6 +28,15 @@ const translations = {
     'termsOfService': 'Terms of Service',
     'contactSupport': 'Contact Support',
     'switchLanguage': 'தமிழில் காட்டு',
+    'apiSettings': 'API Settings',
+    'apiKeyExplanation': 'Enter your OpenAI API key to enable intelligent responses.',
+    'saveApiKey': 'Save API Key',
+    'apiKeySaved': 'API Key Saved',
+    'apiKeyUpdatedSuccessfully': 'Your API key has been updated successfully.',
+    'error': 'Error',
+    'pleaseEnterValidApiKey': 'Please enter a valid API key.',
+    'pleaseAddApiKey': 'Please set your OpenAI API key in settings to enable intelligent responses. Click the settings icon in the top right corner of the chat.',
+    'errorGettingResponse': 'Sorry, I encountered an error while generating a response. Please try again later.',
   },
   ta: {
     'greeting': "வணக்கம்! நான் டாக்டர் தீபா தியாகராஜனின் அலுவலகத்திலிருந்து உங்கள் கர்ப்பகால பராமரிப்பு உதவியாளர். நான் எப்படி உதவ முடியும்?",
@@ -47,6 +55,15 @@ const translations = {
     'termsOfService': 'சேவை விதிமுறைகள்',
     'contactSupport': 'ஆதரவைத் தொடர்பு கொள்ளுங்கள்',
     'switchLanguage': 'Show in English',
+    'apiSettings': 'API அமைப்புகள்',
+    'apiKeyExplanation': 'புத்திசாலித்தனமான பதில்களை செயல்படுத்த உங்கள் OpenAI API விசையை உள்ளிடவும்.',
+    'saveApiKey': 'API விசையை சேமிக்கவும்',
+    'apiKeySaved': 'API விசை சேமிக்கப்பட்டது',
+    'apiKeyUpdatedSuccessfully': 'உங்கள் API விசை வெற்றிகரமாக புதுப்பிக்கப்பட்டது.',
+    'error': 'பிழை',
+    'pleaseEnterValidApiKey': 'தயவுசெய்து சரியான API விசையை உள்ளிடவும்.',
+    'pleaseAddApiKey': 'புத்திசாலித்தனமான பதில்களை செயல்படுத்த உங்கள் OpenAI API விசையை அமைப்புகளில் அமைக்கவும். அரட்டையின் மேல் வலது மூலையில் உள்ள அமைப்பு��ள் ஐகானைக் கிளிக் செய்யவும்.',
+    'errorGettingResponse': 'மன்னிக்கவும், பதிலை உருவாக்கும்போது பிழை ஏற்பட்டது. பின்னர் மீண்டும் முயற்சிக்கவும்.',
   },
 };
 
