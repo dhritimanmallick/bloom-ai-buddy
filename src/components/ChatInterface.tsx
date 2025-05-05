@@ -15,6 +15,18 @@ const ChatInterface: React.FC = () => {
   const { language, t } = useLanguage();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [patientName, setPatientName] = useState<string>('');
+  const [doctorName, setDoctorName] = useState<string>('');
+
+  useEffect(() => {
+    // Load patient data
+    const storedData = localStorage.getItem('patientData');
+    if (storedData) {
+      const parsedData = JSON.parse(storedData);
+      setPatientName(parsedData.name || '');
+      setDoctorName(parsedData.doctor || 'Dr. Dheepa Thyagrajan');
+    }
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -79,9 +91,16 @@ const ChatInterface: React.FC = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex justify-between items-center p-4 border-b">
-        <div className="flex items-center gap-2">
-          <MessageCircle className="h-5 w-5 text-care" />
-          <h2 className="text-lg font-medium">Dr. Dheepa's Care Assistant</h2>
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2">
+            <MessageCircle className="h-5 w-5 text-care" />
+            <h2 className="text-lg font-medium">{doctorName}'s Care Assistant</h2>
+          </div>
+          {patientName && (
+            <p className="text-sm text-muted-foreground ml-7">
+              Hello, {patientName}
+            </p>
+          )}
         </div>
         <ApiKeySettings />
       </div>

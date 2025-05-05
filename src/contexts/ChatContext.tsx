@@ -21,25 +21,75 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   const { language, t } = useLanguage();
-  const [messages, setMessages] = useState<MessageType[]>([
-    {
-      id: '1',
-      text: t('greeting'),
-      sender: 'ai',
-      timestamp: new Date(),
-    },
-  ]);
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const [initialized, setInitialized] = useState(false);
 
-  // Update initial message when language changes
+  // Generate greeting with patient and doctor names
   useEffect(() => {
-    setMessages(prev => [{
-      id: '1',
-      text: t('greeting'),
-      sender: 'ai',
-      timestamp: new Date(),
-    }, ...prev.slice(1)]);
-  }, [language, t]);
+    if (!initialized) {
+      const storedData = localStorage.getItem('patientData');
+      let greeting = t('greeting');
+      
+      if (storedData) {
+        try {
+          const parsedData = JSON.parse(storedData);
+          const patientName = parsedData.name;
+          const doctorName = parsedData.doctor || 'Dr. Dheepa';
+          
+          if (patientName && doctorName) {
+            greeting = `Hello ${patientName}! I'm ${doctorName}'s pregnancy care assistant. How can I help you today?`;
+            if (language === 'ta') {
+              greeting = `வணக்கம் ${patientName}! நான் ${doctorName} கர்ப்பப் பராமரிப்பு உதவியாளர். இன்று நான் உங்களுக்கு எவ்வாறு உதவ முடியும்?`;
+            }
+          }
+        } catch (e) {
+          console.error('Error parsing patient data:', e);
+        }
+      }
+
+      setMessages([{
+        id: '1',
+        text: greeting,
+        sender: 'ai',
+        timestamp: new Date(),
+      }]);
+      
+      setInitialized(true);
+    }
+  }, [language, t, initialized]);
+
+  // Update greeting when language changes
+  useEffect(() => {
+    if (initialized && messages.length > 0) {
+      const storedData = localStorage.getItem('patientData');
+      let greeting = t('greeting');
+      
+      if (storedData) {
+        try {
+          const parsedData = JSON.parse(storedData);
+          const patientName = parsedData.name;
+          const doctorName = parsedData.doctor || 'Dr. Dheepa';
+          
+          if (patientName && doctorName) {
+            greeting = `Hello ${patientName}! I'm ${doctorName}'s pregnancy care assistant. How can I help you today?`;
+            if (language === 'ta') {
+              greeting = `வணக்கம் ${patientName}! நான் ${doctorName} கர்ப்பப் பராமரிப்பு உதவியாளர். இன்று நான் உங்களுக்கு எவ்வாறு உதவ முடியும்?`;
+            }
+          }
+        } catch (e) {
+          console.error('Error parsing patient data:', e);
+        }
+      }
+
+      setMessages(prev => [{
+        id: '1',
+        text: greeting,
+        sender: 'ai',
+        timestamp: new Date(),
+      }, ...prev.slice(1)]);
+    }
+  }, [language, t, initialized]);
 
   const addMessage = (text: string, sender: 'user' | 'ai') => {
     const newMessage: MessageType = {
@@ -52,14 +102,8 @@ export const ChatProvider: React.FC<{children: ReactNode}> = ({ children }) => {
   };
 
   const clearMessages = () => {
-    setMessages([
-      {
-        id: '1',
-        text: t('greeting'),
-        sender: 'ai',
-        timestamp: new Date(),
-      },
-    ]);
+    // Re-initialize with the personalized greeting
+    setInitialized(false);
   };
 
   return (

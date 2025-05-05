@@ -11,6 +11,7 @@ type PatientData = {
   dob: string;
   dueDate: string;
   currentWeek: string;
+  doctor: string;
 };
 
 const UserProfile: React.FC = () => {
@@ -26,7 +27,8 @@ const UserProfile: React.FC = () => {
         name: parsedData.name,
         dob: parsedData.dob,
         dueDate: parsedData.dueDate,
-        currentWeek: parsedData.currentWeek
+        currentWeek: parsedData.currentWeek,
+        doctor: parsedData.doctor || 'Dr. Dheepa Thyagrajan' // Default for existing users
       });
     } else {
       navigate('/login');
@@ -67,6 +69,10 @@ const UserProfile: React.FC = () => {
               <Calendar className="h-4 w-4 text-care" />
               {patientData.dueDate ? format(new Date(patientData.dueDate), 'MMMM d, yyyy') : '-'}
             </span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-sm text-muted-foreground">{t('yourDoctor')}:</span>
+            <span className="font-medium">{patientData.doctor}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-sm text-muted-foreground">{t('nextAppointment')}:</span>

@@ -12,12 +12,20 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type PatientData = {
   name: string;
   dob: Date | undefined;
   dueDate: Date | undefined;
   currentWeek: string;
+  doctor: string;
 };
 
 const Login = () => {
@@ -30,6 +38,7 @@ const Login = () => {
     dob: undefined,
     dueDate: undefined,
     currentWeek: '',
+    doctor: '',
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +50,7 @@ const Login = () => {
     e.preventDefault();
     
     // Validate form
-    if (!patientData.name || !patientData.dob || !patientData.dueDate || !patientData.currentWeek) {
+    if (!patientData.name || !patientData.dob || !patientData.dueDate || !patientData.currentWeek || !patientData.doctor) {
       toast({
         title: t('error'),
         description: t('pleaseCompleteAllFields'),
@@ -62,6 +71,15 @@ const Login = () => {
     // Navigate to home page
     navigate('/');
   };
+
+  // Calculate min and max dates for DOB (allow dates from 50 years ago to today)
+  const currentDate = new Date();
+  const minDobDate = new Date(currentDate);
+  minDobDate.setFullYear(currentDate.getFullYear() - 50);
+  
+  // Calculate min and max dates for due date (allow dates from today to 1 year in future)
+  const maxDueDate = new Date(currentDate);
+  maxDueDate.setFullYear(currentDate.getFullYear() + 1);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
@@ -107,6 +125,10 @@ const Login = () => {
                     onSelect={(date) => setPatientData(prev => ({ ...prev, dob: date }))}
                     initialFocus
                     className="pointer-events-auto"
+                    fromYear={1970}
+                    toYear={currentDate.getFullYear()}
+                    captionLayout="dropdown-buttons"
+                    defaultMonth={new Date(2000, 0)}
                   />
                 </PopoverContent>
               </Popover>
@@ -135,6 +157,8 @@ const Login = () => {
                     onSelect={(date) => setPatientData(prev => ({ ...prev, dueDate: date }))}
                     initialFocus
                     className="pointer-events-auto"
+                    fromDate={currentDate}
+                    toDate={maxDueDate}
                   />
                 </PopoverContent>
               </Popover>
@@ -149,6 +173,23 @@ const Login = () => {
                 onChange={handleInputChange}
                 placeholder={t('enterCurrentWeek')}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="doctor">{t('chooseDoctor')}</Label>
+              <Select 
+                onValueChange={(value) => setPatientData(prev => ({ ...prev, doctor: value }))}
+                value={patientData.doctor}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t('chooseDoctor')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Dr. Dheepa Thyagrajan">{t('drDheepa')}</SelectItem>
+                  <SelectItem value="Dr. Sarah Johnson">{t('drSarah')}</SelectItem>
+                  <SelectItem value="Dr. Robert Chen">{t('drRobert')}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
             <Button type="submit" className="w-full bg-care hover:bg-care-dark">
