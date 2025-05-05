@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 
 type Language = 'en' | 'ta'; // English or Tamil
@@ -10,7 +9,7 @@ type LanguageContextType = {
   t: (key: string) => string;
 };
 
-// Basic translations
+// English translations
 const translations = {
   en: {
     'greeting': "Hello! I'm your antenatal care assistant from Dr. Dheepa Thyagrajan's office. How can I help you today?",
@@ -41,6 +40,16 @@ const translations = {
     'yourAppointments': 'Your Appointments',
     'scheduleAppointment': 'Schedule New Appointment',
     'readMore': 'Read more',
+    'patientLogin': "Patient Login",
+    'enterYourName': "Enter your name",
+    'dateOfBirth': "Date of Birth",
+    'selectDate': "Select date",
+    'enterCurrentWeek': "Enter current week (e.g., 24)",
+    'login': "Login",
+    'error': "Error",
+    'pleaseCompleteAllFields': "Please complete all fields",
+    'success': "Success", 
+    'loginSuccessful': "Login successful"
   },
   ta: {
     'greeting': "வணக்கம்! நான் டாக்டர் தீபா தியாகராஜனின் அலுவலகத்திலிருந்து உங்கள் கர்ப்பகால பராமரிப்பு உதவியாளர். நான் எப்படி உதவ முடியும்?",
@@ -71,6 +80,16 @@ const translations = {
     'yourAppointments': 'உங்கள் சந்திப்புகள்',
     'scheduleAppointment': 'புதிய சந்திப்பை திட்டமிடுங்கள்',
     'readMore': 'மேலும் படிக்க',
+    'patientLogin': "நோயாளி உள்நுழைவு",
+    'enterYourName': "உங்கள் பெயரை உள்ளிடவும்",
+    'dateOfBirth': "பிறந்த தேதி",
+    'selectDate': "தேதியைத் தேர்ந்தெடுக்கவும்",
+    'enterCurrentWeek': "தற்போதைய வாரத்தை உள்ளிடவும் (எ.கா., 24)",
+    'login': "உள்நுழைய",
+    'error': "பிழை",
+    'pleaseCompleteAllFields': "அனைத்து புலங்களையும் பூர்த்தி செய்யவும்",
+    'success': "வெற்றி",
+    'loginSuccessful': "உள்நுழைவு வெற்றிகரமாக உள்ளது"
   },
 };
 
