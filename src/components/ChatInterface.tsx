@@ -16,17 +16,13 @@ const ChatInterface: React.FC = () => {
   const { language, t } = useLanguage();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
-
-  const scrollToBottom = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, [messages, isTyping]);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -79,11 +75,8 @@ const ChatInterface: React.FC = () => {
         <ApiKeySettings />
       </div>
 
-      <div 
-        ref={chatContainerRef}
-        className="flex-1 overflow-hidden p-4"
-      >
-        <ScrollArea className="h-full">
+      <div className="flex-1 overflow-hidden p-4">
+        <ScrollArea className="h-full" ref={scrollAreaRef}>
           <div className="flex flex-col">
             {messages.map((message) => (
               <div
