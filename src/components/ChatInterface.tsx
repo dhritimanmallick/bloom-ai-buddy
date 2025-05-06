@@ -9,19 +9,23 @@ import { cn } from '@/lib/utils';
 import { getChatResponse } from '@/services/aiService';
 import ApiKeySettings from './ApiKeySettings';
 import { toast } from '@/components/ui/use-toast';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const ChatInterface: React.FC = () => {
   const { messages, addMessage, isTyping, setIsTyping } = useChat();
   const { language, t } = useLanguage();
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleSend = async () => {
@@ -75,32 +79,39 @@ const ChatInterface: React.FC = () => {
         <ApiKeySettings />
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 chat-container flex flex-col">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={cn(
-              "max-w-[80%] rounded-lg p-4 mb-2",
-              message.sender === 'ai' 
-                ? "bg-care-light text-gray-800 self-start rounded-bl-none" 
-                : "bg-care text-white self-end rounded-br-none"
+      <div 
+        ref={chatContainerRef}
+        className="flex-1 overflow-hidden p-4"
+      >
+        <ScrollArea className="h-full">
+          <div className="flex flex-col">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={cn(
+                  "max-w-[80%] rounded-lg p-4 mb-2",
+                  message.sender === 'ai' 
+                    ? "bg-care-light text-gray-800 self-start rounded-bl-none" 
+                    : "bg-care text-white self-end rounded-br-none"
+                )}
+              >
+                {message.text}
+              </div>
+            ))}
+            
+            {isTyping && (
+              <div className="max-w-[80%] rounded-lg p-4 mb-2 bg-care-light text-gray-800 self-start rounded-bl-none">
+                <div className="flex space-x-1">
+                  <div className="h-2 w-2 bg-care rounded-full animate-pulse-gentle"></div>
+                  <div className="h-2 w-2 bg-care rounded-full animate-pulse-gentle" style={{ animationDelay: '0.2s' }}></div>
+                  <div className="h-2 w-2 bg-care rounded-full animate-pulse-gentle" style={{ animationDelay: '0.4s' }}></div>
+                </div>
+              </div>
             )}
-          >
-            {message.text}
-          </div>
-        ))}
-        
-        {isTyping && (
-          <div className="max-w-[80%] rounded-lg p-4 mb-2 bg-care-light text-gray-800 self-start rounded-bl-none">
-            <div className="flex space-x-1">
-              <div className="h-2 w-2 bg-care rounded-full animate-pulse-gentle"></div>
-              <div className="h-2 w-2 bg-care rounded-full animate-pulse-gentle" style={{ animationDelay: '0.2s' }}></div>
-              <div className="h-2 w-2 bg-care rounded-full animate-pulse-gentle" style={{ animationDelay: '0.4s' }}></div>
-            </div>
-          </div>
-        )}
 
-        <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} />
+          </div>
+        </ScrollArea>
       </div>
 
       <div className="p-4 border-t">
