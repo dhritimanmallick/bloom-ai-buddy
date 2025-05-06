@@ -7,8 +7,10 @@ import { Settings } from 'lucide-react';
 import { toast } from '@/components/ui/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
 
+const DEFAULT_API_KEY = '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';
+
 const ApiKeySettings: React.FC = () => {
-  const [apiKey, setApiKey] = useState('');
+  const [apiKey, setApiKey] = useState(DEFAULT_API_KEY);
   const [open, setOpen] = useState(false);
   const { t } = useLanguage();
 
@@ -16,6 +18,9 @@ const ApiKeySettings: React.FC = () => {
     const savedKey = localStorage.getItem('openai_api_key');
     if (savedKey) {
       setApiKey(savedKey);
+    } else {
+      // If no key is saved, use the default and save it
+      localStorage.setItem('openai_api_key', DEFAULT_API_KEY);
     }
   }, []);
 
@@ -34,6 +39,15 @@ const ApiKeySettings: React.FC = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const handleReset = () => {
+    setApiKey(DEFAULT_API_KEY);
+    localStorage.setItem('openai_api_key', DEFAULT_API_KEY);
+    toast({
+      title: t('apiKeyReset'),
+      description: t('apiKeyResetToDefault'),
+    });
   };
 
   return (
@@ -63,9 +77,14 @@ const ApiKeySettings: React.FC = () => {
               {t('apiKeyExplanation')}
             </p>
           </div>
-          <Button onClick={handleSave} className="w-full">
-            {t('saveApiKey')}
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={handleSave} className="flex-1">
+              {t('saveApiKey')}
+            </Button>
+            <Button onClick={handleReset} variant="outline" className="flex-1">
+              Reset to Default
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

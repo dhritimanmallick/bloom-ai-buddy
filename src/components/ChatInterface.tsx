@@ -35,18 +35,7 @@ const ChatInterface: React.FC = () => {
     setIsTyping(true);
     
     try {
-      // Check if API key is set
-      const apiKey = localStorage.getItem('openai_api_key');
-      
-      if (!apiKey) {
-        setTimeout(() => {
-          setIsTyping(false);
-          addMessage(t('pleaseAddApiKey'), 'ai');
-        }, 1000);
-        return;
-      }
-      
-      // Get AI response
+      // Get AI response - no need to check for API key as the service now handles default
       const response = await getChatResponse(input, language);
       setIsTyping(false);
       addMessage(response, 'ai');

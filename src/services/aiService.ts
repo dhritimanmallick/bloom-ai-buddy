@@ -2,18 +2,15 @@
 import { toast } from "@/components/ui/use-toast";
 
 const API_URL = "https://api.openai.com/v1/chat/completions";
+const DEFAULT_API_KEY = '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';
 
 export const getChatResponse = async (
   message: string, 
   language: 'en' | 'ta' = 'en'
 ): Promise<string> => {
-  // Get API key from localStorage
-  const apiKey = localStorage.getItem('openai_api_key');
+  // Get API key from localStorage or use default
+  const apiKey = localStorage.getItem('openai_api_key') || DEFAULT_API_KEY;
   
-  if (!apiKey) {
-    throw new Error("API key not found. Please set your OpenAI API key in settings.");
-  }
-
   try {
     const systemPrompt = language === 'en' 
       ? `You are a helpful prenatal care assistant representing Dr. Dheepa Thyagrajan's practice. 
