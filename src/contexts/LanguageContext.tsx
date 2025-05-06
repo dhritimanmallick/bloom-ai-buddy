@@ -1,175 +1,84 @@
+import React, { createContext, useState, useContext, ReactNode } from 'react';
 
-// This file has duplicate properties in the translations object.
-// I'll update it to fix these duplications while preserving functionality.
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-
-type LanguageType = 'en' | 'ta';
-
-type TranslationsType = {
-  [key: string]: {
-    [key in LanguageType]: string;
-  };
-};
-
-const translations: TranslationsType = {
-  greeting: {
-    en: "Hello! I'm Dr. Dheepa's pregnancy care assistant. How can I help you today?",
-    ta: "வணக்கம்! நான் டாக்டர் தீபாவின் கர்ப்பப் பராமரிப்பு உதவியாளர். இன்று நான் உங்களுக்கு எவ்வாறு உதவ முடியும்?"
-  },
-  chatPlaceholder: {
-    en: "Type your question or concern...",
-    ta: "உங்கள் கேள்வி அல்லது கவலையை தட்டச்சு செய்யவும்..."
-  },
-  emergencyNotice: {
-    en: "For emergencies, please call your doctor immediately.",
-    ta: "அவசர நிலைகளுக்கு, உடனடியாக உங்கள் மருத்துவரை அழைக்கவும்."
-  },
-  yourProfile: {
-    en: "Your Profile",
-    ta: "உங்கள் சுயவிவரம்"
-  },
-  name: {
-    en: "Name",
-    ta: "பெயர்"
-  },
-  age: {
-    en: "Age",
-    ta: "வயது"
-  },
-  currentWeek: {
-    en: "Current Week",
-    ta: "நடப்பு வாரம்"
-  },
-  dueDate: {
-    en: "Due Date",
-    ta: "பிரசவ தேதி"
-  },
-  nextAppointment: {
-    en: "Next Appointment",
-    ta: "அடுத்த சந்திப்பு"
-  },
-  emergencySupport: {
-    en: "Emergency Support",
-    ta: "அவசர ஆதரவு"
-  },
-  callHotline: {
-    en: "Call Hotline",
-    ta: "ஹாட்லைன் அழைக்கவும்"
-  },
-  callDoctor: {
-    en: "Call Your Doctor",
-    ta: "உங்கள் மருத்துவரை அழைக்கவும்"
-  },
-  upcomingAppointments: {
-    en: "Upcoming Appointments",
-    ta: "வரவிருக்கும் சந்திப்புகள்"
-  },
-  scheduleNew: {
-    en: "Schedule New",
-    ta: "புதியதை திட்டமிடவும்"
-  },
-  educationalResources: {
-    en: "Educational Resources",
-    ta: "கல்வி வளங்கள்"
-  },
-  footer: {
-    en: "© 2025 Pregnancy Care Assistant",
-    ta: "© 2025 கர்ப்ப பராமரிப்பு உதவியாளர்"
-  },
-  addApiKey: {
-    en: "Add API Key",
-    ta: "API விசையைச் சேர்க்கவும்"
-  },
-  error: {
-    en: "Error",
-    ta: "பிழை"
-  },
-  success: {
-    en: "Success",
-    ta: "வெற்றி"
-  },
-  errorGettingResponse: {
-    en: "Error getting response from AI. Please try again.",
-    ta: "AI இலிருந்து பதில் பெறுவதில் பிழை. தயவுசெய்து மீண்டும் முயற்சிக்கவும்."
-  },
-  pleaseAddApiKey: {
-    en: "Please add your OpenAI API key in the settings to enable AI responses.",
-    ta: "AI பதில்களை இயக்க அமைப்புகளில் உங்கள் OpenAI API விசையைச் சேர்க்கவும்."
-  },
-  patientLogin: {
-    en: "Patient Login",
-    ta: "நோயாளி உள்நுழைவு"
-  },
-  dateOfBirth: {
-    en: "Date of Birth",
-    ta: "பிறந்த தேதி"
-  },
-  enterYourName: {
-    en: "Enter your name",
-    ta: "உங்கள் பெயரை உள்ளிடவும்"
-  },
-  selectDate: {
-    en: "Select date",
-    ta: "தேதியைத் தேர்ந்தெடுக்கவும்"
-  },
-  enterCurrentWeek: {
-    en: "Enter current week of pregnancy",
-    ta: "கர்ப்பத்தின் நடப்பு வாரத்தை உள்ளிடவும்"
-  },
-  login: {
-    en: "Login",
-    ta: "உள்நுழைய"
-  },
-  pleaseCompleteAllFields: {
-    en: "Please complete all fields",
-    ta: "அனைத்து புலங்களையும் பூர்த்தி செய்யவும்"
-  },
-  loginSuccessful: {
-    en: "Login successful",
-    ta: "உள்நுழைவு வெற்றிகரமாக"
-  },
-  chooseDoctor: {
-    en: "Choose Your Doctor",
-    ta: "உங்கள் மருத்துவரைத் தேர்ந்தெடுக்கவும்"
-  },
-  drDheepa: {
-    en: "Dr. Dheepa Thyagrajan",
-    ta: "டாக்டர் தீபா தியாகராஜன்"
-  },
-  drSarah: {
-    en: "Dr. Sarah Johnson",
-    ta: "டாக்டர் சாரா ஜான்சன்"
-  },
-  drRobert: {
-    en: "Dr. Robert Chen",
-    ta: "டாக்டர் ராபர்ட் சென்"
-  },
-  yourDoctor: {
-    en: "Your Doctor",
-    ta: "உங்கள் மருத்துவர்"
-  }
-};
+type Language = 'en' | 'ta'; // English or Tamil
 
 type LanguageContextType = {
-  language: LanguageType;
-  setLanguage: (lang: LanguageType) => void;
+  language: Language;
+  setLanguage: (lang: Language) => void;
+  translations: Record<string, Record<string, string>>;
   t: (key: string) => string;
+};
+
+// Basic translations
+const translations = {
+  en: {
+    'greeting': "Hello! I'm your antenatal care assistant from Dr. Dheepa Thyagrajan's office. How can I help you today?",
+    'appointmentSchedule': 'Schedule Appointment',
+    'emergencySupport': 'Emergency Support',
+    'resources': 'Resources',
+    'chatPlaceholder': 'Ask about your pregnancy care...',
+    'emergencyNotice': 'For medical emergencies, please call emergency services immediately.',
+    'yourProfile': 'Your Profile',
+    'name': 'Name',
+    'age': 'Age',
+    'currentWeek': 'Current Week',
+    'dueDate': 'Due Date',
+    'nextAppointment': 'Next Appointment',
+    'privacyPolicy': 'Privacy Policy',
+    'termsOfService': 'Terms of Service',
+    'contactSupport': 'Contact Support',
+    'switchLanguage': 'தமிழில் காட்டு',
+    'apiSettings': 'API Settings',
+    'apiKeyExplanation': 'Enter your OpenAI API key to enable intelligent responses.',
+    'saveApiKey': 'Save API Key',
+    'apiKeySaved': 'API Key Saved',
+    'apiKeyUpdatedSuccessfully': 'Your API key has been updated successfully.',
+    'error': 'Error',
+    'pleaseEnterValidApiKey': 'Please enter a valid API key.',
+    'pleaseAddApiKey': 'Please set your OpenAI API key in settings to enable intelligent responses. Click the settings icon in the top right corner of the chat.',
+    'errorGettingResponse': 'Sorry, I encountered an error while generating a response. Please try again later.',
+  },
+  ta: {
+    'greeting': "வணக்கம்! நான் டாக்டர் தீபா தியாகராஜனின் அலுவலகத்திலிருந்து உங்கள் கர்ப்பகால பராமரிப்பு உதவியாளர். நான் எப்படி உதவ முடியும்?",
+    'appointmentSchedule': 'சந்திப்பை திட்டமிடுக',
+    'emergencySupport': 'அவசர ஆதரவு',
+    'resources': 'வளங்கள்',
+    'chatPlaceholder': 'உங்கள் கர்ப்பத்தைப் பற்றிக் கேளுங்கள்...',
+    'emergencyNotice': 'மருத்துவ அவசரங்களுக்கு, அவசர சேவைகளை உடனடியாக அழைக்கவும்.',
+    'yourProfile': 'உங்கள் சுயவிவரம்',
+    'name': 'பெயர்',
+    'age': 'வயது',
+    'currentWeek': 'தற்போதைய வாரம்',
+    'dueDate': 'முடிவு தேதி',
+    'nextAppointment': 'அடுத்த சந்திப்பு',
+    'privacyPolicy': 'தனியுரிமைக் கொள்கை',
+    'termsOfService': 'சேவை விதிமுறைகள்',
+    'contactSupport': 'ஆதரவைத் தொடர்பு கொள்ளுங்கள்',
+    'switchLanguage': 'Show in English',
+    'apiSettings': 'API அமைப்புகள்',
+    'apiKeyExplanation': 'புத்திசாலித்தனமான பதில்களை செயல்படுத்த உங்கள் OpenAI API விசையை உள்ளிடவும்.',
+    'saveApiKey': 'API விசையை சேமிக்கவும்',
+    'apiKeySaved': 'API விசை சேமிக்கப்பட்டது',
+    'apiKeyUpdatedSuccessfully': 'உங்கள் API விசை வெற்றிகரமாக புதுப்பிக்கப்பட்டது.',
+    'error': 'பிழை',
+    'pleaseEnterValidApiKey': 'தயவுசெய்து சரியான API விசையை உள்ளிடவும்.',
+    'pleaseAddApiKey': 'புத்திசாலித்தனமான பதில்களை செயல்படுத்த உங்கள் OpenAI API விசையை அமைப்புகளில் அமைக்கவும். அரட்டையின் மேல் வலது மூலையில் உள்ள அமைப்பு��ள் ஐகானைக் கிளிக் செய்யவும்.',
+    'errorGettingResponse': 'மன்னிக்கவும், பதிலை உருவாக்கும்போது பிழை ஏற்பட்டது. பின்னர் மீண்டும் முயற்சிக்கவும்.',
+  },
 };
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{children: ReactNode}> = ({ children }) => {
-  const [language, setLanguage] = useState<LanguageType>('en');
+  const [language, setLanguage] = useState<Language>('en');
 
+  // Function to get translation
   const t = (key: string): string => {
-    if (translations[key] && translations[key][language]) {
-      return translations[key][language];
-    }
-    return key;
+    return translations[language][key] || key;
   };
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, translations, t }}>
       {children}
     </LanguageContext.Provider>
   );
