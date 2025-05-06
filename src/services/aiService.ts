@@ -4,6 +4,15 @@ import { toast } from "@/components/ui/use-toast";
 const API_URL = "https://api.openai.com/v1/chat/completions";
 const DEFAULT_API_KEY = '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';
 
+// Patient profile data to include in prompts
+const patientProfile = {
+  name: "Adhira M",
+  age: 29,
+  currentWeek: 24,
+  dueDate: "August 15, 2025",
+  doctor: "Dr. Dheepa Thyagrajan"
+};
+
 export const getChatResponse = async (
   message: string, 
   language: 'en' | 'ta' = 'en'
@@ -13,14 +22,17 @@ export const getChatResponse = async (
   
   try {
     const systemPrompt = language === 'en' 
-      ? `You are a helpful prenatal care assistant representing Dr. Dheepa Thyagrajan's practice. 
-         Your name is "Amma அம்மா" and you assist patients with questions about pregnancy and prenatal care. 
+      ? `You are a helpful prenatal care assistant representing ${patientProfile.doctor}'s practice. 
+         Your name is "Amma அம்மா" and you assist patients with questions about pregnancy and prenatal care.
+         You are currently speaking with ${patientProfile.name}, who is ${patientProfile.age} years old, in week ${patientProfile.currentWeek} of her pregnancy, with a due date of ${patientProfile.dueDate}.
+         Always personalize your responses based on the patient's profile information.
          Provide helpful, accurate, and compassionate information. For serious medical concerns, always 
-         advise consulting with Dr. Dheepa Thyagrajan directly. Keep responses concise (under 150 words).`
-      : `நீங்கள் டாக்டர் தீபா தியாகராஜனின் பயிற்சியை பிரதிநிதித்துவப்படுத்தும் பயனுள்ள கர்ப்பகால பராமரிப்பு உதவியாளர். 
+         advise consulting with ${patientProfile.doctor} directly. Keep responses concise (under 150 words).`
+      : `நீங்கள் ${patientProfile.doctor} பயிற்சியை பிரதிநிதித்துவப்படுத்தும் பயனுள்ள கர்ப்பகால பராமரிப்பு உதவியாளர்.
          உங்கள் பெயர் "அம்மா" மற்றும் நீங்கள் கர்ப்பம் மற்றும் கர்ப்பகால பராமரிப்பு பற்றிய கேள்விகளுடன் நோயாளிகளுக்கு உதவுகிறீர்கள்.
-         பயனுள்ள, துல்லியமான மற்றும் இரக்கமான தகவலை வழங்கவும். கடுமையான மருத்துவ கவலைகளுக்கு, எப்போதும் 
-         டாக்டர் தீபா தியாகராஜனை நேரடியாக ஆலோசிக்க அறிவுறுத்துங்கள். பதில்களை சுருக்கமாக வைக்கவும் (150 சொற்களுக்கும் குறைவாக).`;
+         நீங்கள் தற்போது ${patientProfile.name} உடன் பேசிக் கொண்டிருக்கிறீர்கள், அவருக்கு ${patientProfile.age} வயது, கர்ப்பத்தின் ${patientProfile.currentWeek} வாரத்தில் உள்ளார், மகப்பேறு தேதி ${patientProfile.dueDate}.
+         பயனுள்ள, துல்லியமான மற்றும் இரக்கமான தகவலை வழங்கவும். கடுமையான மருத்துவ கவலைகளுக்கு, எப்போதும்
+         டாக்டர் ${patientProfile.doctor} நேரடியாக ஆலோசிக்க அறிவுறுத்துங்கள். பதில்களை சுருக்கமாக வைக்கவும் (150 சொற்களுக்கும் குறைவாக).`;
 
     const response = await fetch(API_URL, {
       method: "POST",
