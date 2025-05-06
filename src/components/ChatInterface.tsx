@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { MessageCircle, Send } from 'lucide-react';
+import { MessageCircle, Send, Upload } from 'lucide-react';
 import { useChat } from '@/contexts/ChatContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ import { getChatResponse } from '@/services/aiService';
 import ApiKeySettings from './ApiKeySettings';
 import { toast } from '@/components/ui/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import LabResultUpload from './LabResultUpload';
 
 const ChatInterface: React.FC = () => {
   const { messages, addMessage, isTyping, setIsTyping } = useChat();
@@ -17,10 +18,15 @@ const ChatInterface: React.FC = () => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
+  // Only scroll to bottom when messages change or typing status changes
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      // Use requestAnimationFrame to ensure DOM is fully updated before scrolling
+      requestAnimationFrame(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      });
     }
   }, [messages, isTyping]);
 
@@ -61,6 +67,7 @@ const ChatInterface: React.FC = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
+      e.preventDefault(); // Prevent default form submission behavior
       handleSend();
     }
   };
@@ -72,11 +79,22 @@ const ChatInterface: React.FC = () => {
           <MessageCircle className="h-5 w-5 text-care" />
           <h2 className="text-lg font-medium">Dr. Dheepa's Care Assistant</h2>
         </div>
-        <ApiKeySettings />
+        <div className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="flex items-center gap-2 border-care text-care hover:bg-care/10"
+            onClick={() => setShowUploadModal(true)}
+          >
+            <Upload className="h-4 w-4" />
+            <span className="hidden sm:inline">Upload Lab Results</span>
+          </Button>
+          <ApiKeySettings />
+        </div>
       </div>
 
-      <div className="flex-1 overflow-hidden p-4">
-        <ScrollArea className="h-full" ref={scrollAreaRef}>
+      <div className="flex-1 overflow-hidden p-4 relative">
+        <ScrollArea className="h-full pr-4">
           <div className="flex flex-col">
             {messages.map((message) => (
               <div
@@ -124,6 +142,10 @@ const ChatInterface: React.FC = () => {
           {t('emergencyNotice')}
         </p>
       </div>
+
+      {showUploadModal && (
+        <LabResultUpload onClose={() => setShowUploadModal(false)} />
+      )}
     </div>
   );
 };
