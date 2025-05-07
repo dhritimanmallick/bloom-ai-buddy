@@ -20,13 +20,12 @@ const ChatInterface: React.FC = () => {
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
-  // Only scroll to bottom when messages change or typing status changes
   useEffect(() => {
+    // Ensure scroll to bottom on initial load and when messages change
     if (messagesEndRef.current) {
-      // Use requestAnimationFrame to ensure DOM is fully updated before scrolling
-      requestAnimationFrame(() => {
+      setTimeout(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      });
+      }, 100);
     }
   }, [messages, isTyping]);
 
@@ -94,7 +93,10 @@ const ChatInterface: React.FC = () => {
       </div>
 
       <div className="flex-1 overflow-hidden p-4 relative">
-        <ScrollArea className="h-full pr-4">
+        <ScrollArea 
+          className="h-full pr-4"
+          ref={scrollAreaRef}
+        >
           <div className="flex flex-col">
             {messages.map((message) => (
               <div

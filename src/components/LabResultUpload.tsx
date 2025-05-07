@@ -6,7 +6,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from '@/components/ui/use-toast';
-import { Upload, X } from 'lucide-react';
+import { Upload, X, Loader2 } from 'lucide-react';
+import { useChat } from '@/contexts/ChatContext';
+import { getChatResponseWithImage } from '@/services/aiService';
 
 interface LabResultUploadProps {
   onClose: () => void;
@@ -14,6 +16,7 @@ interface LabResultUploadProps {
 
 const LabResultUpload: React.FC<LabResultUploadProps> = ({ onClose }) => {
   const { t } = useLanguage();
+  const { language, addMessage, setIsTyping } = useChat();
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   
@@ -38,6 +41,15 @@ const LabResultUpload: React.FC<LabResultUploadProps> = ({ onClose }) => {
   const removeFile = (index: number) => {
     setFiles(files.filter((_, i) => i !== index));
   };
+
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = error => reject(error);
+    });
+  };
   
   const handleUpload = async () => {
     if (files.length === 0) {
@@ -51,16 +63,40 @@ const LabResultUpload: React.FC<LabResultUploadProps> = ({ onClose }) => {
     
     setIsUploading(true);
     
-    // Simulate upload process
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    toast({
-      title: t('success'),
-      description: t('labResultsUploaded'),
-    });
-    
-    setIsUploading(false);
-    onClose();
+    try {
+      // Convert the first image to base64
+      const base64Image = await convertToBase64(files[0]);
+      
+      // Add a message to the chat to indicate that a lab result was uploaded
+      addMessage(t('uploadedLabResult'), 'user');
+      
+      setIsTyping(true);
+      
+      // Send the image to the AI for analysis
+      const aiResponse = await getChatResponseWithImage(base64Image, language);
+      
+      setIsTyping(false);
+      addMessage(aiResponse, 'ai');
+      
+      toast({
+        title: t('success'),
+        description: t('labResultsUploaded'),
+      });
+      
+      onClose();
+    } catch (error) {
+      console.error('Error analyzing lab results:', error);
+      
+      toast({
+        title: t('error'),
+        description: t('errorAnalyzingLabResults'),
+        variant: "destructive",
+      });
+      
+      setIsTyping(false);
+    } finally {
+      setIsUploading(false);
+    }
   };
   
   return (
@@ -129,7 +165,14 @@ const LabResultUpload: React.FC<LabResultUploadProps> = ({ onClose }) => {
             disabled={isUploading || files.length === 0}
             className="bg-care hover:bg-care-dark"
           >
-            {isUploading ? 'Uploading...' : 'Upload'}
+            {isUploading ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Analyzing...
+              </span>
+            ) : (
+              'Analyze Lab Results'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
