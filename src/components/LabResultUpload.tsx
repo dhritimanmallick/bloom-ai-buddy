@@ -15,8 +15,8 @@ interface LabResultUploadProps {
 }
 
 const LabResultUpload: React.FC<LabResultUploadProps> = ({ onClose }) => {
-  const { t } = useLanguage();
-  const { language, addMessage, setIsTyping } = useChat();
+  const { t, language } = useLanguage();
+  const { addMessage, setIsTyping } = useChat();
   const [files, setFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   
